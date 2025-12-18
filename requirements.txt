@@ -1,7 +1,7 @@
 PyQt6>=6.6.0
 Pillow>=10.0.0
 opencv-python>=4.8.0
-numpy>=1.24.0
+numpy>=1.24.0,<2.0.0
 
 # Optional: Real-ESRGAN for AI-powered super-resolution
 # Download realesrgan-ncnn-vulkan from:

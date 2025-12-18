@@ -1,6 +1,6 @@
-# Rhancer - Image Enhancer for Linux
+# Rhancer - Image Enhancer
 
-A modern, user-friendly image enhancement application for Linux that improves picture quality through various enhancement algorithms.
+A modern, user-friendly image enhancement application for Linux and Windows that improves picture quality through various enhancement algorithms.
 
 ## Features
 
@@ -23,6 +23,18 @@ A modern, user-friendly image enhancement application for Linux that improves pi
   - Save enhanced images
 
 ## Installation
+
+### Windows
+
+**Easiest method**: Double-click `install.bat` - it will install everything automatically!
+
+**Requirements**:
+- Python 3.8+ (download from python.org, check "Add Python to PATH")
+- **Microsoft Visual C++ 2015-2022 Redistributable (x64)** - [Download here](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+
+See [INSTALL_WINDOWS.md](INSTALL_WINDOWS.md) for detailed Windows installation instructions.
+
+### Linux
 
 1. Install Python 3.8 or higher
 2. Install Python dependencies:
