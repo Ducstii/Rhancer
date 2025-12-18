@@ -16,25 +16,33 @@ from typing import Optional, Callable
 def get_realesrgan_url() -> Optional[str]:
     """Get the download URL for Real-ESRGAN based on the system."""
     # Real-ESRGAN ncnn-vulkan releases
-    # Using the latest stable release
     base_url = "https://github.com/xinntao/Real-ESRGAN/releases/download"
     
-    # Try to detect architecture
     import platform
+    system = platform.system().lower()
     machine = platform.machine().lower()
     
-    # Latest version - using a known working release
-    # Real-ESRGAN ncnn-vulkan releases use different naming
-    # Try the most common Linux x86_64 release
-    if machine in ('x86_64', 'amd64'):
-        # Try multiple possible URLs
-        possible_urls = [
-            f"{base_url}/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip",
-            f"{base_url}/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.tar.gz",
-            "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip"
-        ]
-        # Return the first one (zip format)
-        return possible_urls[0]
+    # Latest version
+    version = "v0.2.5.0"
+    
+    # Windows
+    if system == "windows":
+        if machine in ('x86_64', 'amd64'):
+            return f"{base_url}/{version}/realesrgan-ncnn-vulkan-{version}-windows.zip"
+        elif machine in ('x86', 'i386', 'i686'):
+            return f"{base_url}/{version}/realesrgan-ncnn-vulkan-{version}-windows-x86.zip"
+    
+    # Linux
+    elif system == "linux":
+        if machine in ('x86_64', 'amd64'):
+            return f"{base_url}/{version}/realesrgan-ncnn-vulkan-20220424-ubuntu.zip"
+    
+    # macOS
+    elif system == "darwin":
+        if machine in ('x86_64', 'amd64'):
+            return f"{base_url}/{version}/realesrgan-ncnn-vulkan-{version}-macos.zip"
+        elif machine == "arm64":
+            return f"{base_url}/{version}/realesrgan-ncnn-vulkan-{version}-macos-arm64.zip"
     
     # For other architectures, return None (user needs manual install)
     return None
@@ -97,20 +105,33 @@ def extract_archive(archive_path: Path, extract_to: Path, progress_callback: Opt
 
 def find_realesrgan_binary(extract_dir: Path) -> Optional[Path]:
     """Find the realesrgan-ncnn-vulkan binary in extracted directory."""
+    import platform
+    system = platform.system().lower()
+    
+    # Windows uses .exe extension
+    if system == "windows":
+        binary_name = "realesrgan-ncnn-vulkan.exe"
+    else:
+        binary_name = "realesrgan-ncnn-vulkan"
+    
     # Walk through the extracted directory to find the binary
     for root, dirs, files in os.walk(extract_dir):
         for name in files:
             # Look for the binary (exact name or starts with it)
-            if name == "realesrgan-ncnn-vulkan" or (name.startswith("realesrgan-ncnn-vulkan") and not name.endswith('.zip') and not name.endswith('.tar.gz')):
+            if name == binary_name or (name.startswith("realesrgan-ncnn-vulkan") and 
+                                      not name.endswith('.zip') and 
+                                      not name.endswith('.tar.gz') and
+                                      not name.endswith('.tar')):
                 binary_path = Path(root) / name
-                # Check if it's a file (not a directory) and we can make it executable
+                # Check if it's a file (not a directory)
                 if binary_path.is_file():
                     return binary_path
     
     # Try common direct paths
     possible_paths = [
-        extract_dir / "realesrgan-ncnn-vulkan",
-        extract_dir / "realesrgan-ncnn-vulkan-20220424-ubuntu" / "realesrgan-ncnn-vulkan",
+        extract_dir / binary_name,
+        extract_dir / "realesrgan-ncnn-vulkan" / binary_name,
+        extract_dir / "realesrgan-ncnn-vulkan-20220424-ubuntu" / binary_name,
     ]
     
     for path in possible_paths:
@@ -136,11 +157,22 @@ def install_realesrgan(progress_callback: Optional[Callable[[int, str], None]] =
         bin_dir.mkdir(exist_ok=True)
         
         # Check if already installed
-        binary_path = bin_dir / "realesrgan-ncnn-vulkan"
-        if binary_path.exists() and os.access(binary_path, os.X_OK):
-            if progress_callback:
-                progress_callback(100, "Already installed")
-            return True
+        import platform
+        system = platform.system().lower()
+        binary_name = "realesrgan-ncnn-vulkan.exe" if system == "windows" else "realesrgan-ncnn-vulkan"
+        binary_path = bin_dir / binary_name
+        
+        # On Windows, just check if file exists. On Unix, check if executable
+        if binary_path.exists():
+            if system != "windows":
+                if os.access(binary_path, os.X_OK):
+                    if progress_callback:
+                        progress_callback(100, "Already installed")
+                    return True
+            else:
+                if progress_callback:
+                    progress_callback(100, "Already installed")
+                return True
         
         # Get download URL
         url = get_realesrgan_url()
@@ -182,10 +214,17 @@ def install_realesrgan(progress_callback: Optional[Callable[[int, str], None]] =
         if progress_callback:
             progress_callback(95, "Installing binary...")
         
+        # Determine correct binary name for target platform
+        import platform
+        system = platform.system().lower()
+        target_binary_name = "realesrgan-ncnn-vulkan.exe" if system == "windows" else "realesrgan-ncnn-vulkan"
+        binary_path = bin_dir / target_binary_name
+        
         shutil.copy2(found_binary, binary_path)
         
-        # Make executable
-        os.chmod(binary_path, 0o755)
+        # Make executable (Unix only)
+        if system != "windows":
+            os.chmod(binary_path, 0o755)
         
         # Clean up
         if progress_callback:

@@ -24,30 +24,41 @@ class ImageEnhancer:
     
     def _check_realesrgan(self) -> bool:
         """Check if realesrgan-ncnn-vulkan is available in PATH or local bin."""
+        import platform
+        system = platform.system().lower()
+        binary_name = "realesrgan-ncnn-vulkan.exe" if system == "windows" else "realesrgan-ncnn-vulkan"
+        
         # Check PATH first
-        if shutil.which("realesrgan-ncnn-vulkan") is not None:
+        if shutil.which(binary_name) is not None or shutil.which("realesrgan-ncnn-vulkan") is not None:
             return True
         
         # Check local bin directory
-        local_bin = Path(__file__).parent / "bin" / "realesrgan-ncnn-vulkan"
-        if local_bin.exists() and os.access(local_bin, os.X_OK):
-            return True
+        local_bin = Path(__file__).parent / "bin" / binary_name
+        if local_bin.exists():
+            # On Windows, just check existence. On Unix, check if executable
+            if system == "windows" or os.access(local_bin, os.X_OK):
+                return True
         
         return False
     
     def _get_realesrgan_path(self) -> str:
         """Get the path to realesrgan-ncnn-vulkan binary."""
+        import platform
+        system = platform.system().lower()
+        binary_name = "realesrgan-ncnn-vulkan.exe" if system == "windows" else "realesrgan-ncnn-vulkan"
+        
         # Check PATH first
-        path_bin = shutil.which("realesrgan-ncnn-vulkan")
+        path_bin = shutil.which(binary_name) or shutil.which("realesrgan-ncnn-vulkan")
         if path_bin:
             return path_bin
         
         # Check local bin directory
-        local_bin = Path(__file__).parent / "bin" / "realesrgan-ncnn-vulkan"
-        if local_bin.exists() and os.access(local_bin, os.X_OK):
-            return str(local_bin)
+        local_bin = Path(__file__).parent / "bin" / binary_name
+        if local_bin.exists():
+            if system == "windows" or os.access(local_bin, os.X_OK):
+                return str(local_bin)
         
-        return "realesrgan-ncnn-vulkan"  # Fallback to PATH (will fail if not found)
+        return binary_name  # Fallback to PATH (will fail if not found)
     
     def _validate_image_size(self, image: np.ndarray) -> Tuple[bool, str]:
         """Validate image size to prevent memory issues.
