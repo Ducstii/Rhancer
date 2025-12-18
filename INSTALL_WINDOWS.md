@@ -2,14 +2,16 @@
 
 ## Quick Start
 
-1. **Double-click `install_everything.bat`** - This installs Python 3.12, Visual C++ Redistributables, and all dependencies automatically!
-   - No Python installation needed
-   - No manual downloads required
-   - Just run and wait!
+1. **Double-click `INSTALL.bat`** - This is the main installer!
+   - Automatically installs Python 3.12 if needed
+   - Installs Visual C++ Redistributables
+   - Installs all dependencies
+   - Installs Real-ESRGAN (optional)
+   - **No manual steps required - just run it!**
 
-**Other Installers**:
-- `install.bat` - Full install (Python must be installed first)
-- `install_stable.bat` - Quick install of dependencies only
+**Other Options** (if main installer doesn't work):
+- `install_simple.bat` - Simple installer (assumes Python is already installed)
+- `run.bat` - Quick launcher for the application
 
 ## Manual Installation
 
@@ -43,24 +45,24 @@ This is a runtime library - you don't need Visual Studio or build tools, just th
 
 ### Step 3: Install Dependencies
 
-**Option A: Quick Install (Recommended)**
-Double-click `install_stable.bat` - uses tested, stable versions.
+**Option A: Simple Installer (If Python is already installed)**
+Double-click `install_simple.bat`
 
-**Option B: Full Install Script**
-Double-click `install.bat` - full installation with Real-ESRGAN.
-
-**Option C: Manual Install**
+**Option B: Manual Install - Single Command**
 Open Command Prompt in the project folder and run:
 
 ```batch
-python -m pip install --upgrade pip setuptools wheel
-python -m pip install --only-binary :all: --no-cache-dir -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install numpy==1.26.4 PyQt6==6.6.1 Pillow==10.2.0 opencv-python==4.9.0.80
 ```
 
-**Option D: Single Command (Stable Versions)**
+**Option C: Manual Install - One at a Time**
 ```batch
-python -m pip install --upgrade pip setuptools wheel
-python -m pip install --only-binary :all: --no-cache-dir numpy==1.26.4 PyQt6==6.6.1 Pillow==10.2.0 opencv-python==4.9.0.80
+python -m pip install --upgrade pip
+python -m pip install numpy==1.26.4
+python -m pip install PyQt6==6.6.1
+python -m pip install Pillow==10.2.0
+python -m pip install opencv-python==4.9.0.80
 ```
 
 ### Step 4: Install Real-ESRGAN (Optional)

@@ -2,6 +2,26 @@
 
 A modern, user-friendly image enhancement application for Linux and Windows that improves picture quality through various enhancement algorithms.
 
+## Quick Start (Windows)
+
+**Easiest Method - Double-click `INSTALL.bat`**
+- Automatically installs Python 3.12 if needed
+- Installs Visual C++ Redistributables
+- Installs all dependencies
+- No manual steps required!
+
+**If Auto-Installer Fails - Manual Installation:**
+1. Install Python 3.12 from https://www.python.org/downloads/ (check "Add Python to PATH")
+2. Install Visual C++ Redistributables: https://aka.ms/vs/17/release/vc_redist.x64.exe
+3. Open Command Prompt in this folder and run:
+   ```batch
+   python -m pip install --upgrade pip
+   python -m pip install numpy==1.26.4 PyQt6==6.6.1 Pillow==10.2.0 opencv-python==4.9.0.80
+   ```
+4. Run: `python main.py`
+
+See [INSTALL_SIMPLE.md](INSTALL_SIMPLE.md) for detailed step-by-step instructions.
+
 ## Features
 
 - **Multiple Enhancement Options:**
