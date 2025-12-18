@@ -71,91 +71,52 @@ if errorlevel 1 (
 )
 echo.
 
-echo [2/4] Installing Python dependencies...
-echo Installing NumPy...
-echo Clearing pip cache to ensure fresh download...
-python -m pip cache purge >nul 2>&1
+echo [2/4] Installing Python dependencies (stable versions)...
+echo.
+echo Installing stable, tested versions with pre-built wheels...
+echo These versions work on Python 3.8-3.12 (recommended: Python 3.12)
 echo.
 
 REM Check if Python 3.14+
 python -c "import sys; exit(0 if sys.version_info < (3, 14) else 1)" >nul 2>&1
 if errorlevel 1 (
-    echo Python 3.14+ detected - may need to build from source.
-    echo Attempting to install NumPy (will try wheels first)...
-    python -m pip install --prefer-binary --no-cache-dir "numpy>=1.24.0,<2.0.0"
+    echo WARNING: Python 3.14+ detected!
+    echo.
+    echo Python 3.14 may not have pre-built wheels for all packages.
+    echo You may need Visual Studio Build Tools to compile from source.
+    echo.
+    echo RECOMMENDED: Use Python 3.12 instead
+    echo Download: https://www.python.org/downloads/release/python-3120/
+    echo.
+    echo Press any key to continue anyway...
+    pause >nul
+    echo.
+)
+
+echo Installing all dependencies from requirements.txt...
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install --only-binary :all: --no-cache-dir -r requirements.txt
+if errorlevel 1 (
+    echo.
+    echo WARNING: --only-binary failed, trying with prefer-binary...
+    python -m pip install --prefer-binary --no-cache-dir -r requirements.txt
     if errorlevel 1 (
         echo.
-        echo ERROR: NumPy installation failed!
+        echo ERROR: Failed to install dependencies!
         echo.
-        echo Python 3.14 requires Visual Studio Build Tools to compile packages.
-        echo.
-        echo INSTALL VISUAL STUDIO BUILD TOOLS:
-        echo   1. Download: https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022
-        echo   2. Run installer and select "C++ build tools" workload
-        echo   3. This includes the C++ compiler needed to build NumPy
-        echo.
-        echo OR use Python 3.12 (recommended):
-        echo   Download: https://www.python.org/downloads/release/python-3120/
+        echo SOLUTIONS:
+        echo   1. Install Visual C++ Redistributables (REQUIRED):
+        echo      https://aka.ms/vs/17/release/vc_redist.x64.exe
+        echo   2. Use Python 3.8-3.12 (recommended: 3.12)
+        echo   3. Check your internet connection
+        echo   4. Try: python -m pip install --upgrade pip
         echo.
         pause
         exit /b 1
     )
-) else (
-    echo Python 3.8-3.13 detected - using pre-built wheels...
-    python -m pip install --only-binary :all: --no-cache-dir "numpy>=1.24.0,<2.0.0"
-    if errorlevel 1 (
-        echo.
-        echo Trying with prefer-binary fallback...
-        python -m pip install --prefer-binary --no-cache-dir "numpy>=1.24.0,<2.0.0"
-        if errorlevel 1 (
-            echo.
-            echo ERROR: Failed to install NumPy!
-            echo.
-            echo SOLUTIONS:
-            echo   1. Install Visual C++ Redistributables:
-            echo      https://aka.ms/vs/17/release/vc_redist.x64.exe
-            echo   2. Check your internet connection
-            echo   3. Try: python -m pip install --upgrade pip
-            echo.
-            pause
-            exit /b 1
-        )
-    )
 )
-echo NumPy installed successfully!
 echo.
-
-echo Installing PyQt6...
-python -m pip install PyQt6>=6.6.0
-if errorlevel 1 (
-    echo ERROR: Failed to install PyQt6!
-    pause
-    exit /b 1
-)
-echo PyQt6 installed successfully!
-echo.
-
-echo Installing Pillow...
-python -m pip install Pillow>=10.0.0
-if errorlevel 1 (
-    echo ERROR: Failed to install Pillow!
-    pause
-    exit /b 1
-)
-echo Pillow installed successfully!
-echo.
-
-echo Installing OpenCV...
-python -m pip install opencv-python>=4.8.0
-if errorlevel 1 (
-    echo ERROR: Failed to install OpenCV!
-    echo.
-    echo If this fails, you may need Visual C++ Redistributables:
-    echo   https://aka.ms/vs/17/release/vc_redist.x64.exe
-    pause
-    exit /b 1
-)
-echo OpenCV installed successfully!
+echo All dependencies installed successfully!
 echo.
 
 echo [3/4] Installing Real-ESRGAN...

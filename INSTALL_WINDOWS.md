@@ -2,7 +2,14 @@
 
 ## Quick Start
 
-1. **Double-click `install.bat`** - This will install everything automatically!
+1. **Double-click `install_everything.bat`** - This installs Python 3.12, Visual C++ Redistributables, and all dependencies automatically!
+   - No Python installation needed
+   - No manual downloads required
+   - Just run and wait!
+
+**Other Installers**:
+- `install.bat` - Full install (Python must be installed first)
+- `install_stable.bat` - Quick install of dependencies only
 
 ## Manual Installation
 
@@ -36,11 +43,24 @@ This is a runtime library - you don't need Visual Studio or build tools, just th
 
 ### Step 3: Install Dependencies
 
+**Option A: Quick Install (Recommended)**
+Double-click `install_stable.bat` - uses tested, stable versions.
+
+**Option B: Full Install Script**
+Double-click `install.bat` - full installation with Real-ESRGAN.
+
+**Option C: Manual Install**
 Open Command Prompt in the project folder and run:
 
 ```batch
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install --only-binary :all: --no-cache-dir -r requirements.txt
+```
+
+**Option D: Single Command (Stable Versions)**
+```batch
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install --only-binary :all: --no-cache-dir numpy==1.26.4 PyQt6==6.6.1 Pillow==10.2.0 opencv-python==4.9.0.80
 ```
 
 ### Step 4: Install Real-ESRGAN (Optional)

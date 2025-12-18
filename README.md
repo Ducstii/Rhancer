@@ -26,11 +26,22 @@ A modern, user-friendly image enhancement application for Linux and Windows that
 
 ### Windows
 
-**Easiest method**: Double-click `install.bat` - it will install everything automatically!
+**Complete Auto-Install (Recommended)**: Double-click `install_everything.bat`
+- Automatically installs Python 3.12
+- Installs Visual C++ Redistributables
+- Installs all dependencies
+- Installs Real-ESRGAN
+- **No manual steps required!**
 
-**Requirements**:
-- Python 3.8+ (download from python.org, check "Add Python to PATH")
+**Other Options**:
+- `install.bat` - Full install (assumes Python is already installed)
+- `install_stable.bat` - Quick install of stable dependencies only
+
+**Manual Requirements** (if not using auto-installer):
+- **Python 3.8-3.12** (recommended: Python 3.12) - [Download Python 3.12](https://www.python.org/downloads/release/python-3120/)
 - **Microsoft Visual C++ 2015-2022 Redistributable (x64)** - [Download here](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+
+**Note**: Python 3.13+ may require Visual Studio Build Tools. Python 3.12 is recommended for best compatibility.
 
 See [INSTALL_WINDOWS.md](INSTALL_WINDOWS.md) for detailed Windows installation instructions.
 

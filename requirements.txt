@@ -1,10 +1,14 @@
-PyQt6>=6.6.0
-Pillow>=10.0.0
-opencv-python>=4.8.0
-numpy>=1.24.0,<2.0.0
+# Stable versions with pre-built wheels for Python 3.8-3.12
+# These versions are tested and work on Windows and Linux
+
+numpy==1.26.4
+PyQt6==6.6.1
+Pillow==10.2.0
+opencv-python==4.9.0.80
 
 # Optional: Real-ESRGAN for AI-powered super-resolution
 # Download realesrgan-ncnn-vulkan from:
 # https://github.com/xinntao/Real-ESRGAN/releases
 # Extract and add to PATH for best quality upscaling
+# Or use the auto-installer in the application
 
